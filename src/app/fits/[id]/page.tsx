@@ -15,7 +15,6 @@ const getFitDetails = async (id: string) => {
 
   return res.json();
 };
-
 const FitDetailsPage = async ({
   params,
 }: {
@@ -154,5 +153,4 @@ const FitDetailsPage = async ({
     </div>
   );
 };
-
 export default FitDetailsPage;
