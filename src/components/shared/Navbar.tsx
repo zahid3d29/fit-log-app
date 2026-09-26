@@ -48,17 +48,21 @@ const Navbar = () => {
       <div className="navbar-end flex items-center gap-4">
         <div className="hidden lg:flex items-center gap-4">
           <div className="flex items-center gap-2 bg-[#1a1a1a] px-3.5 py-1.5 rounded-full border border-zinc-800">
-            <span className="text-xs font-semibold text-zinc-300">Plan </span>
-            <span className="bg-[#a3e635] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-              {fitsPlan.length}
-            </span>
+            <Link href="/listed-fits">
+              <span className="text-xs font-semibold text-zinc-300">Plan </span>
+              <span className="bg-[#a3e635] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                {fitsPlan.length}
+              </span>
+            </Link>
           </div>
 
           <div className="flex items-center gap-2 bg-[#1a1a1a] px-3.5 py-1.5 rounded-full border border-zinc-800">
-            <span className="text-xs font-semibold text-zinc-300">Saved</span>
-            <span className="bg-[#27272a] text-zinc-300 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border border-zinc-700">
-              {fitsLater.length}
-            </span>
+            <Link href="/listed-fits">
+              <span className="text-xs font-semibold text-zinc-300">Saved</span>
+              <span className="bg-[#27272a] text-zinc-300 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border border-zinc-700">
+                {fitsLater.length}
+              </span>
+            </Link>
           </div>
         </div>
 
@@ -97,7 +101,7 @@ const Navbar = () => {
             </li>
             <li>
               <Link
-                href="/my-plan"
+                href="/listed-fits"
                 className="text-zinc-300 hover:text-white font-medium py-2.5 text-sm"
               >
                 My Plan
@@ -106,20 +110,25 @@ const Navbar = () => {
             <div className="divider my-1 border-zinc-800"></div>
             <div className="flex items-center justify-between px-2 py-1">
               <div className="flex items-center gap-2 bg-[#1a1a1a] px-3 py-1.5 rounded-full border border-zinc-800">
-                <span className="text-xs font-semibold text-zinc-300">
-                  Plan
-                </span>
-                <span className="bg-[#a3e635] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                  0
-                </span>
+                <Link href="/listed-fits">
+                  <span className="text-xs font-semibold text-zinc-300">
+                    Plan
+                  </span>
+                  <span className="bg-[#a3e635] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                    {fitsPlan.length}
+                  </span>
+                </Link>
               </div>
+
               <div className="flex items-center gap-2 bg-[#1a1a1a] px-3 py-1.5 rounded-full border border-zinc-800">
-                <span className="text-xs font-semibold text-zinc-300">
-                  Saved
-                </span>
-                <span className="bg-[#27272a] text-zinc-300 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border border-zinc-700">
-                  0
-                </span>
+                <Link href="/listed-fits">
+                  <span className="text-xs font-semibold text-zinc-300">
+                    Saved
+                  </span>
+                  <span className="bg-[#27272a] text-zinc-300 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border border-zinc-700">
+                    {fitsLater.length}
+                  </span>
+                </Link>
               </div>
             </div>
           </ul>
