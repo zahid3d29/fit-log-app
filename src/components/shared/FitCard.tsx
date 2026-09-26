@@ -10,6 +10,7 @@ const FitCard = ({ fit }: { fit: IFit }) => {
         key={fit.id}
         className="bg-[#17171a] border border-zinc-800 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between"
       >
+        
         <div className="relative w-full h-56 bg-zinc-900 flex items-center justify-center p-0">
           
         <Image

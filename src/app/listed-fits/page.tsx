@@ -1,22 +1,4 @@
-// "use client";
 
-// import FitsContext from "@/context/FitsContext";
-// import React, { useContext } from "react";
-
-// interface FitsContextType {
-//   fitsPlan: unknown[];
-// }
-
-// const ListedFits = () => {
-//   const { fitsPlan, fitsLater } = useContext(FitsContext) as FitsContextType;
-
-//   // console.log(fitsPlan,fitsLater, "Fits Plan", "fits Later");
-//   return <div>
-//     listed Fits | Total Listed Books: { fitsPlan.length } <br/> | Total saved Plan: { fitsLater.length }
-//   </div>;
-// };
-
-// export default ListedFits;
 
 "use client";
 
@@ -25,16 +7,17 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useContext, useState } from "react";
 
-
-
 interface Fit {
   id: string;
-  title: string;
-  image?: string;
-  equipment?: string;
+  name: string;
+  image: string;
+  description: string;
+  date: string;
   duration: number;
-  calories: number;
-  rating?: number;
+  caloriesBurned: number;
+  rating: number;
+  muscleGroups: string[];
+  equipment: string;
   completed?: boolean;
 }
 
@@ -48,7 +31,7 @@ const ListedFits = () => {
 
   const [activeTab, setActiveTab] = useState<"today" | "saved">("today");
 
-  const [sortBy, setSortBy] = useState<"duration" | "calories" | "title">(
+  const [sortBy, setSortBy] = useState<"duration" | "caloriesBurned" | "title">(
     "duration",
   );
 
@@ -59,10 +42,10 @@ const ListedFits = () => {
   const sortedList = [...filteredList].sort((a, b) => {
     if (sortBy === "duration") {
       return a.duration - b.duration;
-    } else if (sortBy === "calories") {
-      return a.calories - b.calories;
+    } else if (sortBy === "caloriesBurned") {
+      return a.caloriesBurned - b.caloriesBurned;
     } else {
-      return a.title.localeCompare(b.title);
+      return a.name.localeCompare(b.name);
     }
   });
 
@@ -73,19 +56,15 @@ const ListedFits = () => {
     0,
   );
   const totalCalories = filteredList.reduce(
-    (sum, item) => sum + item.calories,
+    (sum, item) => sum + item.caloriesBurned,
     0,
   );
 
   const handleRemove = (id: string) => {
     if (activeTab === "today") {
-      const updatedPlan = fitsPlan.filter((item) => item.id !== id);
-      // Update the context state for fitsPlan
-      // setFitsPlan(updatedPlan);
+      // TODO: Update the context state for fitsPlan.
     } else {
-      const updatedSaved = fitsLater.filter((item) => item.id !== id);
-      // Update the context state for fitsLater
-      // setFitsLater(updatedSaved);
+      // TODO: Update the context state for fitsLater.
     }
   };
 
@@ -177,12 +156,14 @@ const ListedFits = () => {
               <select
                 value={sortBy}
                 onChange={(e) =>
-                  setSortBy(e.target.value as "duration" | "calories" | "title")
+                  setSortBy(
+                    e.target.value as "duration" | "caloriesBurned" | "title",
+                  )
                 }
                 className="bg-[#181a20] border border-gray-800 text-white text-xs font-medium px-4 py-2 rounded-xl focus:outline-none appearance-none pr-8 cursor-pointer"
               >
                 <option value="duration">Duration</option>
-                <option value="calories">Calories</option>
+                <option value="caloriesBurned">Calories</option>
                 <option value="title">Name</option>
               </select>
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-[10px]">
@@ -206,14 +187,14 @@ const ListedFits = () => {
                   <div className="relative w-28 h-16 rounded-xl overflow-hidden bg-gray-800 shrink-0">
                     <Image
                       src={item.image || "/images/placeholder.jpg"}
-                      alt={item.title}
+                      alt={item.name}
                       fill
                       className="w-full h-full object-cover"
                     />
                   </div>
                   <div className="space-y-1">
                     <h3 className="font-extrabold text-sm sm:text-base uppercase tracking-wider text-white">
-                      {item.title}
+                      {item.name}
                     </h3>
                     <p className="text-xs text-gray-400 font-medium">
                       {item.equipment || "No equipment"}
@@ -225,7 +206,7 @@ const ListedFits = () => {
                       </span>
                       <span className="flex items-center space-x-1">
                         <span>🔥</span>
-                        <span>{item.calories || 0} kcal</span>
+                        <span>{item.caloriesBurned || 0} kcal</span>
                       </span>
                       <span className="flex items-center space-x-1">
                         <span className="text-yellow-400">⭐</span>
@@ -238,7 +219,7 @@ const ListedFits = () => {
                 {/* Right Action Buttons */}
                 <div className="flex items-center space-x-3 self-end sm:self-center">
                   <Link
-                    href={`/workouts/${item.id}`}
+                    href={`/fits/${item.id}`}
                     className="bg-[#21252e] hover:bg-[#2b303c] border border-gray-700/60 text-white font-semibold text-xs px-4 py-2.5 rounded-xl transition-colors"
                   >
                     View Details

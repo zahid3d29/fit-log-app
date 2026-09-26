@@ -1,9 +1,18 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useContext } from "react";
 import logo from "@/assets/logo.png";
+import { FitsContext } from "@/context/FitsContext";
+
+interface FitsContextType {
+  fitsPlan: unknown[];
+  fitsLater: unknown[];
+}
 
 const Navbar = () => {
+  const { fitsPlan, fitsLater } = useContext(FitsContext) as FitsContextType;
   return (
     <div className="navbar bg-[#121212] text-white px-4 lg:px-12 py-3 shadow-md">
       <div className="navbar-start">
@@ -33,30 +42,22 @@ const Navbar = () => {
               My Plan
             </Link>
           </li>
-          <li>
-            <Link
-              href="/settings"
-              className="text-zinc-400 hover:text-white font-medium px-5 py-2 rounded-full"
-            >
-              Settings
-            </Link>
-          </li>
         </ul>
       </div>
 
       <div className="navbar-end flex items-center gap-4">
         <div className="hidden lg:flex items-center gap-4">
           <div className="flex items-center gap-2 bg-[#1a1a1a] px-3.5 py-1.5 rounded-full border border-zinc-800">
-            <span className="text-xs font-semibold text-zinc-300">Plan</span>
+            <span className="text-xs font-semibold text-zinc-300">Plan </span>
             <span className="bg-[#a3e635] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-              0
+              {fitsPlan.length}
             </span>
           </div>
 
           <div className="flex items-center gap-2 bg-[#1a1a1a] px-3.5 py-1.5 rounded-full border border-zinc-800">
             <span className="text-xs font-semibold text-zinc-300">Saved</span>
             <span className="bg-[#27272a] text-zinc-300 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border border-zinc-700">
-              0
+              {fitsLater.length}
             </span>
           </div>
         </div>
@@ -100,14 +101,6 @@ const Navbar = () => {
                 className="text-zinc-300 hover:text-white font-medium py-2.5 text-sm"
               >
                 My Plan
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/settings"
-                className="text-zinc-300 hover:text-white font-medium py-2.5 text-sm"
-              >
-                Settings
               </Link>
             </li>
             <div className="divider my-1 border-zinc-800"></div>

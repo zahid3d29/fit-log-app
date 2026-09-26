@@ -1,7 +1,7 @@
 "use client";
 
 import { IFit } from "@/types/fits.type";
-import React, { createContext, ReactNode, useState } from "react";
+import React, { createContext, ReactNode, Suspense, useState } from "react";
 
 export const FitsContext = createContext({});
 
@@ -17,10 +17,16 @@ export const FitsProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <FitsContext.Provider value={sharedData}>{children}</FitsContext.Provider>
-//     <FitsContext.Provider value={{ fitsPlan, setFitsPlan }}>
-//   {children}
-// </FitsContext.Provider>
+    <Suspense
+      fallback={
+        <div>
+          <span className="loading loading-spinner text-info"></span>Loading
+          workouts…
+        </div>
+      }
+    >
+      <FitsContext.Provider value={sharedData}>{children}</FitsContext.Provider>
+    </Suspense>
   );
 };
 

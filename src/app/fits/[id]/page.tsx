@@ -115,7 +115,7 @@ const FitDetailsPage = async ({
                 CALORIES
               </span>
               <span className="text-gray-200 font-medium">
-                {fitDetails.calories} kcal
+                {fitDetails.caloriesBurned} kcal
               </span>
             </div>
 
@@ -145,9 +145,9 @@ const FitDetailsPage = async ({
 
           {/* Action Buttons */}
           <div className="flex items-center space-x-4 pt-2">
-           <FitPlanButton fitDetails={fitDetails} />
+            <FitPlanButton fitDetails={fitDetails} />
 
-            <FitSaveButton fitDetails={fitDetails}/>
+            <FitSaveButton fitDetails={fitDetails} />
           </div>
         </div>
       </div>
