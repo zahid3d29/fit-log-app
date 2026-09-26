@@ -10,5 +10,4 @@ interface IFit {
   muscleGroups: string[];
   equipment: string;
 }
-
 export type { IFit };
