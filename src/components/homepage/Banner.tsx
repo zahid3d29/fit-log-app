@@ -47,5 +47,4 @@ return (
 );
 };
 
-
 export default Banner;
