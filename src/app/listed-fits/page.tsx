@@ -68,6 +68,7 @@ const ListedFits = () => {
     }
   };
 
+  
   const handleToggleDone = (id: string) => {
     const updatedList = filteredList.map((item) =>
       item.id === id ? { ...item, completed: !item.completed } : item,
