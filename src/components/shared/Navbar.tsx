@@ -48,7 +48,7 @@ const Navbar = () => {
       <div className="navbar-end flex items-center gap-4">
         <div className="hidden lg:flex items-center gap-4">
           <div className="flex items-center gap-2 bg-[#1a1a1a] px-3.5 py-1.5 rounded-full border border-zinc-800">
-            <Link href="/listed-fits">
+            <Link href="/listed-fits" className="flex gap-2 justify-between">
               <span className="text-xs font-semibold text-zinc-300">Plan </span>
               <span className="bg-[#a3e635] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                 {fitsPlan.length}
@@ -57,7 +57,7 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-2 bg-[#1a1a1a] px-3.5 py-1.5 rounded-full border border-zinc-800">
-            <Link href="/listed-fits">
+            <Link href="/listed-fits" className="flex gap-2 justify-between">
               <span className="text-xs font-semibold text-zinc-300">Saved</span>
               <span className="bg-[#27272a] text-zinc-300 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border border-zinc-700">
                 {fitsLater.length}
