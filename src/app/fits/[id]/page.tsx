@@ -34,7 +34,7 @@ const FitDetailsPage = async ({
       }
     >
       <div className="min-h-screen bg-[#111319] text-white p-6 md:p-12 flex justify-center items-center">
-        <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        <div className="max-w-9xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
           {/* Left Side: Image */}
           <div className="w-full h-full rounded-2xl overflow-hidden bg-gray-800">
             <Image

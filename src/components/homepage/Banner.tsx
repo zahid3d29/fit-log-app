@@ -7,7 +7,7 @@ const Banner = () => {
 return (
   <div className="bg-[#121212] px-4 lg:px-12 py-6">
     <div className="hero bg-[#17171a] text-white py-12 lg:py-20 px-6 lg:px-12 rounded-3xl border border-zinc-800/80 shadow-2xl max-w-9xl mx-auto">
-      <div className="hero-content flex-col lg:flex-row-reverse justify-between w-full max-w-6xl mx-auto p-0 gap-8 lg:gap-12">
+      <div className="hero-content flex-col lg:flex-row-reverse justify-between w-full max-w-[100rem] mx-auto p-0 gap-8 lg:gap-12">
         <div className="w-full lg:w-1/2 flex justify-center items-center">
           <div className="relative w-full max-w-[400px] aspect-square flex items-center justify-center">
             <Image

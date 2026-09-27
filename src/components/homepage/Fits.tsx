@@ -19,7 +19,7 @@ const Fits = async () => {
 
   return (
     <div className="bg-[#121212] text-white py-12 px-4 lg:px-12 w-full min-h-screen">
-      <div className="max-w-7xl mx-auto space-y-8">
+      <div className="max-w-9xl mx-auto space-y-8">
         <div className="space-y-1">
           <h2
             id="library"

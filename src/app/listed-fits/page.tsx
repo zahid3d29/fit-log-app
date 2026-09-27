@@ -1,11 +1,15 @@
-
-
 "use client";
 
 import { FitsContext } from "@/context/FitsContext";
 import Image from "next/image";
 import Link from "next/link";
 import React, { Suspense, useContext, useState } from "react";
+import { toast } from "react-toastify";
+import { FaRegStar } from "react-icons/fa";
+import { FaFireAlt } from "react-icons/fa";
+import { MdOutlineWatchLater } from "react-icons/md";
+
+
 
 interface Fit {
   id: string;
@@ -24,85 +28,103 @@ interface Fit {
 interface FitsContextType {
   fitsPlan: Fit[];
   fitsLater: Fit[];
+  setFitsPlan: React.Dispatch<React.SetStateAction<Fit[]>>;
+  setFitsLater: React.Dispatch<React.SetStateAction<Fit[]>>;
 }
 
 const ListedFits = () => {
-  const { fitsPlan, fitsLater } = useContext(FitsContext) as FitsContextType;
+  const context = useContext(
+    FitsContext as unknown as React.Context<FitsContextType | undefined>,
+  );
+
+  const fitsPlan = context?.fitsPlan ?? [];
+  const fitsLater = context?.fitsLater ?? [];
+  const setFitsPlan = context?.setFitsPlan;
+  const setFitsLater = context?.setFitsLater;
 
   const [activeTab, setActiveTab] = useState<"today" | "saved">("today");
-
+  const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"duration" | "caloriesBurned" | "title">(
     "duration",
   );
 
-  // Filter the list based on the active tab
-  const filteredList = activeTab === "today" ? fitsPlan : fitsLater;
+  // Filter list by active tab and search query (matches name, equipment, or muscle tags)
+  const baseList = activeTab === "today" ? fitsPlan : fitsLater;
 
-  // Sort the filtered list based on the selected sort option
-  const sortedList = [...filteredList].sort((a, b) => {
-    if (sortBy === "duration") {
-      return a.duration - b.duration;
-    } else if (sortBy === "caloriesBurned") {
-      return a.caloriesBurned - b.caloriesBurned;
-    } else {
-      return a.name.localeCompare(b.name);
-    }
+  const filteredList = baseList.filter((item) => {
+    const query = searchQuery.toLowerCase().trim();
+    if (!query) return true;
+
+    const matchesName = item.name.toLowerCase().includes(query);
+    const matchesEquipment = item.equipment?.toLowerCase().includes(query);
+    const matchesMuscles = item.muscleGroups?.some((muscle) =>
+      muscle.toLowerCase().includes(query),
+    );
+
+    return matchesName || matchesEquipment || matchesMuscles;
   });
 
-  // Calculate total stats
-  const totalExercises = filteredList.length;
-  const totalMinutes = filteredList.reduce(
-    (sum, item) => sum + item.duration,
-    0,
-  );
-  const totalCalories = filteredList.reduce(
+  // Sort list
+  const sortedList = [...filteredList].sort((a, b) => {
+    if (sortBy === "duration") return a.duration - b.duration;
+    if (sortBy === "caloriesBurned") return a.caloriesBurned - b.caloriesBurned;
+    return a.name.localeCompare(b.name);
+  });
+
+  // Dynamic stats
+  const totalExercises = baseList.length;
+  const totalMinutes = baseList.reduce((sum, item) => sum + item.duration, 0);
+  const totalCalories = baseList.reduce(
     (sum, item) => sum + item.caloriesBurned,
     0,
   );
 
   const handleRemove = (id: string) => {
+    const targetItem = baseList.find((item) => item.id === id);
     if (activeTab === "today") {
-      // TODO: Update the context state for fitsPlan.
+      setFitsPlan?.((prev) => prev.filter((item) => item.id !== id));
+      toast.info(
+        `Removed "${targetItem?.name || "Workout"}" from today's plan.`,
+      );
     } else {
-      // TODO: Update the context state for fitsLater.
+      setFitsLater?.((prev) => prev.filter((item) => item.id !== id));
+      toast.info(`Removed "${targetItem?.name || "Workout"}" from saved list.`);
     }
   };
 
-
   const handleToggleDone = (id: string) => {
-    const updatedList = filteredList.map((item) =>
-      item.id === id ? { ...item, completed: !item.completed } : item,
+    const targetItem = fitsPlan.find((item) => item.id === id);
+    const isNowCompleted = !targetItem?.completed;
+
+    setFitsPlan?.((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, completed: isNowCompleted } : item,
+      ),
     );
 
-    if (activeTab === "today") {
-      // setFitsPlan(updatedList);
+    if (isNowCompleted) {
+      toast.success(`🎉 Great job! Marked "${targetItem?.name}" as completed!`);
     } else {
-      // setFitsLater(updatedList);
+      toast.info(`Unmarked "${targetItem?.name}".`);
     }
   };
 
   return (
-    <Suspense
-      fallback={
-        <div>
-          <span className="loading loading-spinner text-info"></span>Loading
-          workouts…
-        </div>
-      }
-    >
+    <Suspense fallback={<div className="p-10 text-white">Loading...</div>}>
       <div className="min-h-screen bg-[#111318] text-white p-6 sm:p-10 font-sans">
         <div className="max-w-5xl mx-auto space-y-6">
-          {/* Header Section */}
+          {/* Header */}
           <div>
             <h1 className="text-3xl font-black uppercase tracking-wider text-white">
               MY PLAN
             </h1>
             <p className="text-gray-400 text-xs sm:text-sm mt-1">
-              Cap of five lifts for today. Finish them, then load more.
+              Cap of five lifts for today ({totalExercises}/5). Finish them,
+              then load more.
             </p>
           </div>
 
-          {/* Dynamic Stats Banner */}
+          {/* Stats Banner */}
           <div className="bg-[#181a20] border border-gray-800/80 rounded-2xl p-6 grid grid-cols-3 gap-4">
             <div className="space-y-1">
               <span className="text-gray-400 text-xs font-semibold tracking-wide block">
@@ -112,7 +134,6 @@ const ListedFits = () => {
                 {totalExercises}
               </span>
             </div>
-
             <div className="space-y-1 border-l border-gray-800/60 pl-6">
               <span className="text-gray-400 text-xs font-semibold tracking-wide block">
                 Minutes
@@ -121,7 +142,6 @@ const ListedFits = () => {
                 {totalMinutes}
               </span>
             </div>
-
             <div className="space-y-1 border-l border-gray-800/60 pl-6">
               <span className="text-gray-400 text-xs font-semibold tracking-wide block">
                 Calories
@@ -132,10 +152,10 @@ const ListedFits = () => {
             </div>
           </div>
 
-          {/* Tab & Sort Navigation Bar */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
+          {/* Navigation, Search & Controls */}
+          <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 pt-2">
             {/* Tabs */}
-            <div className="bg-[#181a20] p-1 rounded-xl border border-gray-800/80 flex items-center space-x-1">
+            <div className="bg-[#181a20] p-1 rounded-xl border border-gray-800/80 flex items-center space-x-1 shrink-0">
               <button
                 onClick={() => setActiveTab("today")}
                 className={`px-5 py-2 text-xs font-bold rounded-lg transition-all ${
@@ -144,7 +164,7 @@ const ListedFits = () => {
                     : "text-gray-400 hover:text-white"
                 }`}
               >
-                Today's Plan
+                Today's Plan ({fitsPlan.length})
               </button>
               <button
                 onClick={() => setActiveTab("saved")}
@@ -154,12 +174,23 @@ const ListedFits = () => {
                     : "text-gray-400 hover:text-white"
                 }`}
               >
-                Saved
+                Saved ({fitsLater.length})
               </button>
             </div>
 
-            {/* Sort Select Dropdown */}
-            <div className="flex items-center space-x-2 self-end sm:self-auto">
+            {/* Search Input */}
+            <div className="flex-1 max-w-md">
+              <input
+                type="text"
+                placeholder="Search by name, tag, or equipment..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-[#181a20] border border-gray-800 text-white text-xs px-4 py-2.5 rounded-xl focus:outline-none focus:border-gray-600 placeholder-gray-500"
+              />
+            </div>
+
+            {/* Sort Dropdown */}
+            <div className="flex items-center space-x-2 shrink-0">
               <span className="text-xs text-gray-400 font-medium">Sort By</span>
               <div className="relative">
                 <select
@@ -182,16 +213,14 @@ const ListedFits = () => {
             </div>
           </div>
 
-          {/* Content Container */}
+          {/* Cards List View */}
           {sortedList.length > 0 ? (
-            /* Cards List View */
             <div className="space-y-4">
               {sortedList.map((item) => (
                 <div
                   key={item.id}
                   className="bg-[#181a20] border border-gray-800/80 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors hover:border-gray-700"
                 >
-                  {/* Item Details */}
                   <div className="flex items-center space-x-4">
                     <div className="relative w-28 h-16 rounded-xl overflow-hidden bg-gray-800 shrink-0">
                       <Image
@@ -209,23 +238,22 @@ const ListedFits = () => {
                         {item.equipment || "No equipment"}
                       </p>
                       <div className="flex items-center space-x-3 text-xs text-gray-300 pt-0.5">
-                        <span className="flex items-center space-x-1">
-                          <span>🕒</span>
-                          <span>{item.duration} min</span>
+                        <span className="flex justify-between  gap-1 text-gray-400">
+                          <MdOutlineWatchLater />
+                          {item.duration} min
                         </span>
-                        <span className="flex items-center space-x-1">
-                          <span>🔥</span>
-                          <span>{item.caloriesBurned || 0} kcal</span>
+                        <span className="flex justify-between gap-1 text-gray-400">
+                          <FaFireAlt />
+                          {item.caloriesBurned || 0} kcal
                         </span>
-                        <span className="flex items-center space-x-1">
-                          <span className="text-yellow-400">⭐</span>
-                          <span>{item.rating || 4.5}</span>
+                        <span className="flex justify-between gap-1 text-gray-400">
+                          <FaRegStar />
+                          {item.rating || 4.5}
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Right Action Buttons */}
                   <div className="flex items-center space-x-3 self-end sm:self-center">
                     <Link
                       href={`/fits/${item.id}`}
@@ -234,11 +262,10 @@ const ListedFits = () => {
                       View Details
                     </Link>
 
-                    {/* "Mark as Done" button only visible on "Today's Plan" tab */}
                     {activeTab === "today" && (
                       <button
                         onClick={() => handleToggleDone(item.id)}
-                        className={`font-bold text-xs px-4 py-2.5 rounded-xl flex items-center space-x-1.5 transition-colors ${
+                        className={`font-bold text-xs px-4 py-2.5 rounded-xl flex items-center space-x-1.5 transition-colors cursor-pointer ${
                           item.completed
                             ? "bg-gray-700 text-gray-300"
                             : "bg-[#ccff00] hover:bg-[#b3e600] text-black"
@@ -249,10 +276,9 @@ const ListedFits = () => {
                       </button>
                     )}
 
-                    {/* Remove Button */}
                     <button
                       onClick={() => handleRemove(item.id)}
-                      className="text-gray-500 hover:text-white text-lg p-1 transition-colors"
+                      className="text-gray-500 hover:text-white text-lg p-1 transition-colors cursor-pointer"
                       title="Remove"
                     >
                       ✕
@@ -262,23 +288,16 @@ const ListedFits = () => {
               ))}
             </div>
           ) : (
-            /* Empty State View */
-            <div className="border border-dashed border-gray-800/80 rounded-2xl p-12 min-h-[350px] flex items-center justify-center bg-[#14161d]/50">
+            <div className="border border-dashed border-gray-800/80 rounded-2xl p-12 min-h-[300px] flex items-center justify-center bg-[#14161d]/50">
               <div className="text-center space-y-3 max-w-sm mx-auto">
                 <h2 className="text-lg font-black uppercase tracking-wider text-white">
-                  NOTHING HERE YET
+                  {searchQuery ? "NO MATCHES FOUND" : "NOTHING HERE YET"}
                 </h2>
                 <p className="text-xs text-gray-400 leading-relaxed">
-                  Browse the library and add a lift to get today moving.
+                  {searchQuery
+                    ? `No workouts found matching "${searchQuery}". Try a different keyword.`
+                    : "Browse the library and add a lift to get today moving."}
                 </p>
-                <div className="pt-2">
-                  <Link
-                    href="/"
-                    className="inline-block bg-[#ccff00] hover:bg-[#b3e600] text-black font-bold text-xs px-6 py-3 rounded-full transition-colors"
-                  >
-                    Go to workouts
-                  </Link>
-                </div>
               </div>
             </div>
           )}
