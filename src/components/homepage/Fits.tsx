@@ -23,7 +23,7 @@ const Fits = async () => {
         <div className="space-y-1">
           <h2
             id="library"
-            className="text-2xl sm:text-3xl font-black font-mono tracking-wider uppercase"
+            className="text-2xl sm:text-3xl font-black tracking-wider uppercase"
           >
             THE LIBRARY
           </h2>

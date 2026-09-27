@@ -33,7 +33,7 @@ const Navbar = () => {
       <div className="navbar-start">
         <Link href="/" className="flex items-center gap-2.5">
           <Image src={logo} width="28" alt="logo" />
-          <span className="text-xl font-black tracking-wider text-white font-mono">
+          <span className="text-xl font-black tracking-wider text-white">
             FITLOG
           </span>
         </Link>

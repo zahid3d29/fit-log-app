@@ -24,7 +24,7 @@ return (
           <span className="text-[#a3e635] text-xs sm:text-sm font-bold tracking-widest uppercase">
             Workout Library
           </span>
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none uppercase font-mono">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none uppercase">
             Train with intent. <br className="hidden sm:inline" /> Log every
             set.
           </h1>

@@ -111,7 +111,7 @@ const ListedFits = () => {
 
   return (
     <Suspense fallback={<div className="p-10 text-white">Loading...</div>}>
-      <div className="min-h-screen bg-[#111318] text-white p-6 sm:p-10 font-sans">
+      <div className="min-h-screen bg-[#111318] text-white p-6 sm:p-10">
         <div className="max-w-5xl mx-auto space-y-6">
           {/* Header */}
           <div>
