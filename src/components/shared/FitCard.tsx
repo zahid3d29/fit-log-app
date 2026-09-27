@@ -1,5 +1,4 @@
 import Image from "next/image";
-import React from "react";
 import { IFit } from "../../types/fits.type";
 import Link from "next/link";
 

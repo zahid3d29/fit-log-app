@@ -4,6 +4,8 @@ import FitsContext from "@/context/FitsContext";
 import { IFit } from "@/types/fits.type";
 import React, { useContext } from "react";
 import { toast } from "react-toastify";
+import { FaRegCalendarPlus } from "react-icons/fa6";
+
 
 interface FitsContextType {
   fitsPlan: IFit[];
@@ -32,15 +34,16 @@ const FitPlanButton = ({ fitDetails }: { fitDetails: IFit }) => {
     }
 
     setFitsPlan([...fitsPlan, fitDetails]);
-    toast.success(`You have added "${fitDetails.name}" to your plan!`);
+    toast.success(`Added "${fitDetails.name}" to today's plan`);
   };
 
   return (
     <button
       onClick={handleAddToPlan}
-      className="bg-[#ccff00] hover:bg-[#b3e600] text-black font-semibold text-xs px-5 py-3 rounded-xl transition-colors cursor-pointer"
+      className="flex gap-2 justify-between bg-[#ccff00] hover:bg-[#b3e600] text-black font-semibold text-xs px-5 py-3 rounded-xl transition-colors cursor-pointer"
     >
-      Add to Plan
+      <FaRegCalendarPlus className="w-3.75 h-3.75"/>
+      <span>Add to today's plan</span>
     </button>
   );
 };

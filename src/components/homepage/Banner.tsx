@@ -34,7 +34,7 @@ return (
           </p>
           <div>
             <Link
-              href="/workouts"
+              href="#library"
               className="btn bg-[#a3e635] hover:bg-[#8acc2b] text-black font-bold border-none px-8 py-3 rounded-xl tracking-wide uppercase text-sm shadow-lg"
             >
               Browse Workouts

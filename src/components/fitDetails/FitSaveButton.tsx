@@ -4,6 +4,7 @@ import FitsContext from "@/context/FitsContext";
 import { IFit } from "@/types/fits.type";
 import React, { useContext } from "react";
 import { toast } from "react-toastify";
+import { LiaSave } from "react-icons/lia";
 
 interface FitsContextType {
   fitsLater: IFit[];
@@ -32,15 +33,16 @@ const FitSaveButton = ({ fitDetails }: { fitDetails: IFit }) => {
     }
 
     setFitsLater([...fitsLater, fitDetails]);
-    toast.success(`You have added "${fitDetails.name}" to saved list`);
+    toast.success(`added plan "${fitDetails.name}" to saved list`);
   };
 
   return (
     <button
       onClick={handleAddToSave}
-      className="border border-gray-700 hover:bg-gray-800 text-gray-300 font-semibold text-xs px-5 py-3 rounded-xl flex items-center space-x-2 transition-colors cursor-pointer"
+      className="justify-between border border-gray-700 hover:bg-gray-800 text-gray-300 font-semibold text-xs px-5 py-3 rounded-xl flex items-center space-x-2 transition-colors cursor-pointer"
     >
-      <span>🔖</span>
+      <LiaSave className="w-3.75 h-3.75" />
+
       <span>Save for later</span>
     </button>
   );
